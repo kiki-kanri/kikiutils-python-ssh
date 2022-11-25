@@ -9,36 +9,39 @@ class AsyncSSHClient:
         host: str,
         port: int,
         username: str,
-        password: str
+        password: str,
+        known_hosts=None
     ):
         self.c: SSHClientConnection
         self.s: SFTPClient
+
         self.host = host
+        self.known_hosts = known_hosts
+        self.password = password
         self.port = port
         self.username = username
-        self.password = password
 
     async def connect(self, **kwargs):
         """Connect to server and open sftp connection.
 
         If the connection error, return error Exception.
 
-        @param `kwargs`: asyncssh.connect other parameters.
+        @param `kwargs` - asyncssh.connect other parameters.
         """
 
         try:
             self.c = await asyncssh.connect(
                 self.host,
                 self.port,
+                known_hosts=self.known_hosts,
                 password=self.password,
                 username=self.username,
                 **kwargs
             )
 
             self.s = await self.c.start_sftp_client()
-            return True
-        except Exception as e:
-            return e
+        except Exception as error:
+            return error
 
     async def chdir(self, remotepath: str):
         """Change sftp directory."""
@@ -105,6 +108,14 @@ class AsyncSSHClient:
         """Remove remote dir."""
 
         await self.s.rmdir(remotepath)
+
+    async def rmtree(self, remotepath: str, **kwargs):
+        """Force remove remote dir.
+
+        @param `kwargs` - sftp rmtree other parameters.
+        """
+
+        await self.s.rmtree(remotepath, **kwargs)
 
     async def run(
         self,
