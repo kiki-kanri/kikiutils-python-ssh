@@ -1,7 +1,5 @@
 import asyncssh
 
-from asyncssh import SSHClientConnection, SFTPClient
-
 
 class AsyncSSHClient:
     def __init__(
@@ -12,8 +10,8 @@ class AsyncSSHClient:
         password: str,
         known_hosts=None
     ):
-        self.c: SSHClientConnection
-        self.s: SFTPClient
+        self.c: asyncssh.SSHClientConnection
+        self.s: asyncssh.SFTPClient
 
         self.host = host
         self.known_hosts = known_hosts
@@ -26,7 +24,7 @@ class AsyncSSHClient:
 
         If the connection error, return error Exception.
 
-        @param `kwargs` - asyncssh.connect other parameters.
+        @param `kwargs` - `asyncssh.connect` other parameters.
         """
 
         try:
@@ -123,7 +121,7 @@ class AsyncSSHClient:
         get_std_out: bool = True,
         **kwargs
     ):
-        """Run command and return stdout or SSHCompletedProcess."""
+        """Run command and return stdout or `SSHCompletedProcess`."""
 
         result = await self.c.run(command, **kwargs)
 
