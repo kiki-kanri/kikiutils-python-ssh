@@ -77,12 +77,7 @@ class AsyncSSHClient:
 
         await self.s.mkdir(remotepath, **kwargs)
 
-    async def mkdirs(
-        self,
-        remotepath: str,
-        exist_ok: bool = True,
-        **kwargs
-    ):
+    async def mkdirs(self, remotepath: str, exist_ok: bool = True, **kwargs):
         """Make remote directories."""
 
         await self.s.makedirs(remotepath, exist_ok=exist_ok, **kwargs)
@@ -115,12 +110,7 @@ class AsyncSSHClient:
 
         await self.s.rmtree(remotepath, **kwargs)
 
-    async def run(
-        self,
-        command: str,
-        get_std_out: bool = True,
-        **kwargs
-    ):
+    async def run(self, command: str, get_std_out: bool = True, **kwargs):
         """Run command and return stdout or `SSHCompletedProcess`."""
 
         result = await self.c.run(command, **kwargs)
@@ -130,21 +120,14 @@ class AsyncSSHClient:
 
         return result
 
-    async def run_and_show(
-        self,
-        command: str,
-        **kwargs
-    ):
+    async def run_and_show(self, command: str, **kwargs):
         """Run command and instant display result, then return all result."""
 
-        results = ''
-        process = await self.c.create_process(
-            command,
-            **kwargs
-        )
+        results = []
+        process = await self.c.create_process(command, **kwargs)
 
         async for line in process.stdout:
-            results += str(line)
+            results.append(str(line))
             print(line, end='')
 
-        return results
+        return ''.join(results)

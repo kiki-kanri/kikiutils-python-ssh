@@ -9,7 +9,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=True,
-    version='1.0.1',
+    version='1.0.2',
     description='Utils ssh functions',
     author='kiki-kanri',
     author_email='a470666@gmail.com',
@@ -17,5 +17,5 @@ setup(
     install_requires=[
         'asyncssh'
     ],
-    python_requires=">=3.6"
+    python_requires=">=3.8"
 )
